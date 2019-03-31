@@ -8,7 +8,6 @@ const router = express.Router();
 
 let user = require('./user.model');
 
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/user', router);
@@ -19,7 +18,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/userdb', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function () {
-    console.log("MongoDB database connection established successfully");
+    console.log("MongoDB database(userdb) connection established successfully");
 })
 
 //func to get all the user details
@@ -28,6 +27,18 @@ router.route('/').get(function (req, res) {
         if (err) {
             console.log(err);
         } else {
+            res.json(users);
+        }
+    });
+});
+
+//func to get all the user details by constituency
+router.route('/:con').get(function (req, res) {
+    user.find({constituency:req.params.con}, function (err, users) {
+        if (err) {
+            return res.status(400).send("error");
+        }
+        else {
             res.json(users);
         }
     });
@@ -70,6 +81,7 @@ router.route('/signin').post(function (req, res) {
         
     });
 });
+
 
 app.listen(PORT, function () {
     console.log("Server is running on Port: " + PORT);
