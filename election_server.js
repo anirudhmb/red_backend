@@ -21,6 +21,29 @@ connection.once('open', function () {
     console.log("MongoDB database(electiondb) connection established successfully");
 })
 
+//list all elections
+router.route('/').get(function (req, res) {
+    election.find(function (err, elections) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(elections);
+        }
+    });
+});
+
+//create an election
+router.route('/create').post(function (req, res) {
+    let electionBody = new election(req.body);
+    electionBody.save()
+        .then(electionBody => {
+            res.status(200).json({ 'election': 'election created successfully' })
+        })
+        .catch(err => {
+            res.status(400).send('failed');
+        });
+});
+
 app.listen(PORT, function () {
     console.log("Server is running on Port: " + PORT);
 });
