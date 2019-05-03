@@ -15,6 +15,7 @@ app.use('/user', router);
 mongoose.set('debug', true);
 
 mongoose.connect('mongodb://127.0.0.1:27017/userdb', { useNewUrlParser: true });
+//mongoose.connect('mongodb+srv://dbUser:dbPass@cluster0-hgbdj.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function () {
@@ -61,7 +62,7 @@ router.route('/create').post(function (req, res) {
 router.route('/signin').post(function (req, res) {
     //email_id is present in -> req.body.mail
     //password present in -> req.body.pwd
-    //device_id present in -> req.devid
+    //device_id present in -> req.device_id
     user.findOne({ email_id: req.body.mail }, function (err, users) {
         if (err) {
             console.log("=====================");
@@ -72,14 +73,35 @@ router.route('/signin').post(function (req, res) {
             return res.status(404).send('user not found');
         }
 
-        if (req.body.pwd == users.password && req.body.devid == users.device_id) {
+        if (req.body.pwd == users.password && req.body.device_id == users.device_id) {
             res.send(true);
         }
         else {
             res.send(false);
         }
-        
+
     });
+});
+
+//to allocate device to the users
+//send adhaar_card_number and device_id as POST variables
+router.route('/alloc').post(function(req,res){
+  //adhaar_card_number present in -> adhaar
+  //device_id present in -> device_id
+  user.findOneAndUpdate(
+    {adhaar_card_number : req.body.adhaar},
+    {$set:{device_id:req.body.device_id}},
+    {new: true},
+    (err, doc) => {
+      if (err) {
+          console.log("Something wrong when updating data!");
+          return res.status(400).send("error allocating device.");
+      }
+
+      console.log(doc);
+      res.send("successfull");
+    }
+  );
 });
 
 

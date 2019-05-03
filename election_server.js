@@ -44,6 +44,40 @@ router.route('/create').post(function (req, res) {
         });
 });
 
+// router.route('/vote/:id/:party').get(function (req, res) {
+//   election.findOne({"_id":req.params.id, "candidates":{$elemMatch: {"party_name": req.params.party}}}, function(err, elections) {
+//        if (err) { console.log(err); }
+//        else { res.json(elections); }
+//      });
+// });
+
+
+//Update vote in the database
+router.route('/list/:id/:canid').get(function (req, res){
+  election.findById(req.params.id, function(err, elections) {
+    if(err){
+      console.log(err);
+    }
+    else {
+      console.log(elections.candidates.id(req.params.canid).vote_count);
+      elections.candidates.id(req.params.canid).vote_count = elections.candidates.id(req.params.canid).vote_count + 1;
+      elections.save();
+      console.log(elections.candidates.id(req.params.canid).vote_count);
+
+      res.json(true);
+
+//       var candidates = elections.candidates;
+//       console.log(elections.candidates);
+//       res.json(candidates);
+// //      var x = elections.find("_id" : "5ca09aec9b8fc81f2da6510b", "candidates._id" : "5ca09aec
+    //  console.log(x);
+    }
+
+  })
+
+});
+
+
 app.listen(PORT, function () {
     console.log("Server is running on Port: " + PORT);
 });
