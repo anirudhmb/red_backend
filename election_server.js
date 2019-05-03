@@ -78,6 +78,28 @@ router.route('/list/:id/:canid').get(function (req, res){
 });
 
 
+//to add candidates to an election
+router.route('/nomination').post(function(req,res){
+  //election_id present in -> election_id
+  //candidate details should be sent in a json format with the body name as candidate
+  election.findByIdAndUpdate(
+    req.body.election_id,
+    {$push:{candidates:req.body.candidate}},
+    (err, doc) => {
+      if (err) {
+          console.log("Something wrong when adding candidate!");
+          return res.status(400).send("could not add candidate.");
+      }
+
+      console.log(doc);
+      res.send("successfull");
+    }
+  );
+});
+
+
+
+
 app.listen(PORT, function () {
     console.log("Server is running on Port: " + PORT);
 });

@@ -18,7 +18,7 @@ let election = new Schema({
         type: String,
         default: "--"
     },
-    candidates: {
+    candidates: [{
         name: {
             type: String
         },
@@ -30,9 +30,8 @@ let election = new Schema({
         },
         vote_count: {
             type: Number,
-            default: 0
         }
-    }
+    }]
 });
 
 module.exports = mongoose.model('election', election);
