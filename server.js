@@ -62,7 +62,8 @@ router.route('/create').post(function (req, res) {
 router.route('/signin').post(function (req, res) {
     //email_id is present in -> req.body.mail
     //password present in -> req.body.pwd
-    //device_id present in -> req.device_id
+    //device_id present in -> req.body.device_id
+    //role present in -> req.body.role
     user.findOne({ email_id: req.body.mail }, function (err, users) {
         if (err) {
             console.log("=====================");
@@ -73,13 +74,37 @@ router.route('/signin').post(function (req, res) {
             return res.status(404).send('user not found');
         }
 
-        if (req.body.pwd == users.password && req.body.device_id == users.device_id) {
-            res.send(true);
-        }
-        else {
-            res.send(false);
-        }
+        if(req.body.mail==users.email_id && req.body.pwd==users.password){
+          if(typeof req.body.device_id != undefined){
+            if(users.role=="ecp_admin"){
+              return res.status(200).json({"role":"ecp_admin","action":"portal signin"});
+            } else {
+              return res.status(401).json({"role":"user","action":"unauthorized access"});
+            }
+          }
+          user.findOne({device_id: req.body.device_id}, function(err, docs){
+            if(err){
+              console.log(err);
+              return res.status(400).json({"error":err});
+            }
+            else if(!docs){
+              if(users.role=="ecp_admin"){
+                return res.status(200).json({"role":"ecp_admin","action":"allocate_device"});
+              } else {
+                return res.status(401).json({"role":"user","action":"unauthorized access"});
+              }
+            }
 
+            if(users.role=="ecp_admin"){
+              return res.status(200).json({"role":"ecp_admin","action":"null"});
+            } else {
+              //TODO : connect to election server and get if any election is going on currently
+              return res.status(200).json({"role":"user", "action":"successfull login"});
+            }
+          });
+        } else {
+          return res.status(401).json({"role":"user","action":"unauthorized access"});
+        }
     });
 });
 
