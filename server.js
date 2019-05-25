@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = 3000;
 const router = express.Router();
+var http = require('http');
+var axios = require('axios');
 
 let user = require('./user.model');
 
@@ -75,7 +77,7 @@ router.route('/signin').post(function (req, res) {
         }
 
         if(req.body.mail==users.email_id && req.body.pwd==users.password){
-          if(typeof req.body.device_id != undefined){
+          if(typeof req.body.device_id == undefined){
             if(users.role=="ecp_admin"){
               return res.status(200).json({"role":"ecp_admin","action":"portal signin"});
             } else {
@@ -98,8 +100,7 @@ router.route('/signin').post(function (req, res) {
             if(users.role=="ecp_admin"){
               return res.status(200).json({"role":"ecp_admin","action":"null"});
             } else {
-              //TODO : connect to election server and get if any election is going on currently
-              return res.status(200).json({"role":"user", "action":"successfull login"});
+              return res.status(200).json({"role":"user", "action":"successfull login", "constituency":users.constituency});
             }
           });
         } else {
