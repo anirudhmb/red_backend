@@ -16,8 +16,8 @@ app.use('/user', router);
 
 mongoose.set('debug', true);
 
-mongoose.connect('mongodb://127.0.0.1:27017/userdb', { useNewUrlParser: true });
-//mongoose.connect('mongodb+srv://dbUser:dbPass@cluster0-hgbdj.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
+//mongoose.connect('mongodb://127.0.0.1:27017/userdb', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://dbUser:dbPass@cluster0-hgbdj.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function () {
@@ -77,6 +77,7 @@ router.route('/signin').post(function (req, res) {
         }
 
         if(req.body.mail==users.email_id && req.body.pwd==users.password){
+          console.log(users);
           if(typeof req.body.device_id == undefined){
             if(users.role=="ecp_admin"){
               return res.status(200).json({"role":"ecp_admin","action":"portal signin"});

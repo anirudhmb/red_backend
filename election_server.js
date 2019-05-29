@@ -14,7 +14,8 @@ app.use('/elec', router);
 
 mongoose.set('debug', true);
 
-mongoose.connect('mongodb://127.0.0.1:27017/electiondb', { useNewUrlParser: true });
+//mongoose.connect('mongodb://127.0.0.1:27017/electiondb', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://dbUser:dbPass@cluster0-hgbdj.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function () {
