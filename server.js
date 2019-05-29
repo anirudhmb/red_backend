@@ -6,7 +6,6 @@ const cors = require('cors');
 const PORT = 3000;
 const router = express.Router();
 var http = require('http');
-var axios = require('axios');
 
 let user = require('./user.model');
 
