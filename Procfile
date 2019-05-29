@@ -1,1 +1,1 @@
-web: nodemon election_server.js
+web: nodemon server.js
