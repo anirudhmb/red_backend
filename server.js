@@ -54,6 +54,7 @@ router.route('/create').post(function (req, res) {
             res.status(200).json({ 'user': 'user added successfully' })
         })
         .catch(err => {
+          console.log(err);
             res.status(400).send('failed');
         });
 });
