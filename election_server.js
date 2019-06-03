@@ -57,7 +57,7 @@ router.route('/create').post(function (req, res) {
 router.route('/list/:constituency').get(function(req, res){
   console.log(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
   console.log(new Date().toISOString());
-  election.find({constituency:req.params.constituency,start_time:{"$lte":new Date().toLocaleString({timeZone: "Asia/Kolkata"})},end_time:{"$gt":new Date().toLocaleString({timeZone: "Asia/Kolkata"})}},function(err, docs){
+  election.find({constituency:req.params.constituency,start_time:{"$lte":new Date()},end_time:{"$gt":new Date()}},function(err, docs){
     if(err){
       return res.status(400).send(err);
     }
